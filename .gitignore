@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+venv/
+env/
+.env
+
+# IDE
+.idea/
+.vscode/
+
+# Logs
+*.log
+
+# Local development configuration
+config.py
+
+# Database
+*.db
+*.sqlite3
+
+# Uploaded files
+backend/uploads/*
+!backend/uploads/.gitkeep
+backend/uploads/books/*
+!backend/uploads/books/.gitkeep
+backend/uploads/covers/*
+!backend/uploads/covers/.gitkeep
+backend/uploads/temp/*
+!backend/uploads/temp/.gitkeep
+
+# Node modules
+node_modules/
+dist/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Build files
+dist/
+build/
+
+# System Files
+.DS_Store
+Thumbs.db

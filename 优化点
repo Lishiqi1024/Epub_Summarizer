@@ -1,0 +1,155 @@
+根据当前项目的代码，我列举出需要优化的地方和潜在bug，并按开发难度分类：
+
+### 低难度优化（1-2天）
+
+1. **阅读进度保存**
+- 问题：目前没有保存阅读进度功能
+- 解决：使用 localStorage 存储每本书的阅读位置
+- 优化点：
+  ```javascript
+  // 添加到 epub.service.js
+  saveProgress(bookId, cfi) {
+    localStorage.setItem(`book_progress_${bookId}`, cfi)
+  }
+  
+  restoreProgress(bookId) {
+    return localStorage.getItem(`book_progress_${bookId}`)
+  }
+  ```
+
+2. **阅读设置持久化**
+- 问题：字体大小、主题等设置刷新后丢失
+- 解决：将用户设置保存到 localStorage
+- 难度：低
+
+3. **加载状态优化**
+- 问题：章节切换时没有loading状态
+- 解决：添加过渡动画和加载提示
+- 优化点：使用 Element Plus 的 loading 指令
+
+### 中等难度优化（3-5天）
+
+1. **章节解析问题**
+- 问题：部分EPUB书籍章节解析不完整
+- 解决：改进章节解析算法
+- 优化点：
+  ```javascript
+  // 在 epub.service.js 中增强解析逻辑
+  async getChapters() {
+    // 添加多级标题识别
+    const titleSelectors = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']
+    // 添加目录项识别
+    const navSelectors = ['.chapter', '.section', '[role="doc-chapter"]']
+    // 处理嵌套结构
+    // 处理特殊字符
+  }
+  ```
+
+2. **阅读视图优化**
+- 问题：移动端适配不够好
+- 解决：添加响应式布局
+- 优化点：
+  ```css
+  // 添加媒体查询
+  @media (max-width: 768px) {
+    .toc-panel {
+      position: absolute;
+      z-index: 100;
+    }
+    .reader-view {
+      padding: 10px;
+    }
+  }
+  ```
+
+3. **书签功能**
+- 问题：缺少书签功能
+- 解决：实现书签添加、删除、跳转
+- 难度：中等
+
+### 高难度优化（1-2周）
+
+1. **离线阅读支持**
+- 问题：需要在线加载EPUB
+- 解决：实现PWA，支持离线缓存
+- 难度：高
+- 涉及：Service Worker, Cache API
+
+2. **阅读数据同步**
+- 问题：多设备阅读进度不同步
+- 解决：添加用户系统，云端同步
+- 难度：高
+- 需要：
+  - 后端API设计
+  - 数据库设计
+  - 同步机制实现
+
+3. **AI总结优化**
+- 问题：当前AI总结不够智能
+- 解决：改进AI分析算法
+- 优化点：
+  ```python
+  # 在后端优化AI处理
+  class AIService:
+    def analyze_chapter(self, content):
+      # 1. 分段处理
+      # 2. 关键信息提取
+      # 3. 多维度分析
+      # 4. 上下文关联
+      pass
+  ```
+
+### 性能优化（持续改进）
+
+1. **章节预加载**
+- 问题：章节切换有延迟
+- 解决：预加载下一章节
+- 难度：中等
+- 优化点：
+  ```javascript
+  // 在 epub.service.js 中添加
+  async preloadNextChapter() {
+    const nextIndex = currentChapter.index + 1
+    if (nextIndex < this.chapters.length) {
+      // 预加载下一章
+    }
+  }
+  ```
+
+2. **内存管理**
+- 问题：长时间阅读内存占用增加
+- 解决：添加内存管理机制
+- 难度：高
+- 优化点：
+  ```javascript
+  // 添加资源释放机制
+  class ResourceManager {
+    clearUnusedChapters() {
+      // 清理非当前章节的资源
+    }
+  }
+  ```
+
+### 建议优化顺序：
+
+1. 先解决基础体验问题：
+   - 阅读进度保存
+   - 加载状态优化
+   - 阅读设置持久化
+
+2. 改进核心功能：
+   - 章节解析问题
+   - 阅读视图优化
+   - 书签功能
+
+3. 添加高级特性：
+   - 离线阅读
+   - 数据同步
+   - AI优化
+
+4. 持续性能优化：
+   - 预加载机制
+   - 内存管理
+   - 响应速度优化
+
+这些优化可以根据实际需求和资源情况进行调整和选择。建议先从用户体验最直接的问题开始解决。
