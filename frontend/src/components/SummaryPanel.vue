@@ -1,5 +1,5 @@
 <template>
-  <el-card class="summary-card">
+  <el-card class="summary-card" style="height: 100%; display: flex; flex-direction: column;">
     <template #header>
       <div class="summary-header">
         <h3>AI 智能分析</h3>
@@ -59,6 +59,7 @@
 import TabPanel from './TabPanel.vue'
 import apiService from '../services/api.service'
 import mermaid from 'mermaid'
+import { marked } from 'marked'
 
 export default {
   name: 'SummaryPanel',
@@ -87,11 +88,11 @@ export default {
   computed: {
     formattedSummary() {
       if (!this.summary) return '';
-      return this.summary.replace(/\n/g, '<br>');
+      return marked(this.summary);
     },
     formattedTranslation() {
       if (!this.translation) return '';
-      return this.translation.replace(/\n/g, '<br>');
+      return marked(this.translation);
     },
     hasContent() {
       return this.summary || this.translation || this.diagram;
@@ -201,7 +202,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .summary-card {
   height: 100%;
   display: flex;
@@ -209,17 +210,18 @@ export default {
 }
 
 .summary-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  text-align: center;
+  margin-bottom: 10px;
 }
 
 .summary-header h3 {
   margin: 0;
+  font-size: 18px;
+  color: #409EFF;
 }
 
 .summary-header p {
-  margin: 0;
+  margin: 5px 0 0;
   font-size: 14px;
   color: #606266;
 }
@@ -231,13 +233,36 @@ export default {
 .summary-content {
   flex: 1;
   overflow-y: auto;
-  padding: 0 10px;
+  padding: 0 15px;
+  height: calc(100vh - 250px);
 }
 
-.summary-empty {
-  text-align: center;
-  padding: 20px;
-  color: #909399;
+.summary-content :deep(h1),
+.summary-content :deep(h2),
+.summary-content :deep(h3),
+.summary-content :deep(h4),
+.summary-content :deep(h5),
+.summary-content :deep(h6) {
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  color: #303133;
+}
+
+.summary-content :deep(p) {
+  margin: 0.5em 0;
+  line-height: 1.6;
+  color: #606266;
+}
+
+.summary-content :deep(ul),
+.summary-content :deep(ol) {
+  padding-left: 20px;
+  margin: 0.5em 0;
+}
+
+.summary-content :deep(li) {
+  margin: 0.3em 0;
+  color: #606266;
 }
 
 .tab-loading {
@@ -247,27 +272,14 @@ export default {
 }
 
 .diagram-container {
-  padding: 10px;
+  padding: 15px;
+  text-align: center;
 }
 
-.mermaid-diagram {
-  width: 100%;
-  overflow-x: auto;
+@media (max-width: 768px) {
+  .summary-content {
+    height: auto;
+    max-height: 50vh;
+  }
 }
-
-.diagram-error {
-  padding: 10px;
-  background-color: #fef0f0;
-  border-radius: 4px;
-  color: #f56c6c;
-}
-
-.diagram-error pre {
-  margin-top: 10px;
-  padding: 10px;
-  background-color: #f5f7fa;
-  border-radius: 4px;
-  overflow-x: auto;
-  font-size: 12px;
-}
-</style> 
+</style>

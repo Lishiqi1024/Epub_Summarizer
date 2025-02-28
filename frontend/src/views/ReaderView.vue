@@ -1,8 +1,13 @@
 <template>
   <div class="reader-container">
+    <!-- 汉堡菜单按钮 -->
+    <div class="hamburger-menu" @click="toggleToc">
+      <i :class="[isTocVisible ? 'el-icon-close' : 'el-icon-menu']"></i>
+    </div>
+    
     <el-row :gutter="20" class="reader-layout">
       <!-- 左侧面板：章节列表 -->
-      <el-col :span="6" class="toc-panel">
+      <el-col :span="6" class="toc-panel" :class="{'toc-hidden': !isTocVisible}">
         <el-card class="toc-card">
           <template #header>
             <div class="toc-header">
@@ -64,7 +69,7 @@
       </el-col>
       
       <!-- 中间面板：阅读器 -->
-      <el-col :span="10" class="reader-panel">
+      <el-col :span="isTocVisible ? 10 : 14" class="reader-panel">
         <el-card class="reader-card">
           <div v-if="loading" class="loading-container">
             <el-skeleton :rows="15" animated />
@@ -76,7 +81,7 @@
       </el-col>
       
       <!-- 右侧面板：AI总结 -->
-      <el-col :span="8" class="summary-panel">
+      <el-col :span="isTocVisible ? 8 : 10" class="summary-panel" :style="{'display': 'block'}">
         <SummaryPanel
           :chapter="activeChapter"
           :loading="summaryLoading"
@@ -116,7 +121,8 @@ export default {
       summaryLoading: false,
       loading: false,
       currentFontSize: localStorage.getItem('reader_font_size') || 'medium',
-      currentTheme: localStorage.getItem('reader_theme') || 'light'
+      currentTheme: localStorage.getItem('reader_theme') || 'light',
+      isTocVisible: localStorage.getItem('reader_toc_visible') !== 'false'
     }
   },
   mounted() {
@@ -243,6 +249,11 @@ export default {
     setTheme(theme) {
       this.currentTheme = theme
       localStorage.setItem('reader_theme', theme)
+    },
+    
+    toggleToc() {
+      this.isTocVisible = !this.isTocVisible
+      localStorage.setItem('reader_toc_visible', this.isTocVisible)
     }
   }
 }
@@ -252,21 +263,58 @@ export default {
 .reader-container {
   max-width: 1600px;
   margin: 0 auto;
+  position: relative;
+}
+
+.hamburger-menu {
+  position: fixed;
+  top: 70px;
+  left: 20px;
+  z-index: 1000;
+  background-color: #ff6b6b;
+  color: white;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.2);
+  transition: all 0.3s;
+  border: 2px solid white;
+}
+
+.hamburger-menu:hover {
+  transform: scale(1.1);
+  background-color: #ff4757;
 }
 
 .reader-layout {
   display: flex;
   min-height: calc(100vh - 180px);
+  height: calc(100vh - 100px);
 }
 
 .toc-panel {
   height: 100%;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.toc-panel.toc-hidden {
+  max-width: 0;
+  padding: 0;
+  margin: 0;
+  opacity: 0;
+  display: none;
 }
 
 .toc-card {
   height: 100%;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .toc-header {
@@ -280,7 +328,8 @@ export default {
 .chapter-list {
   flex: 1;
   overflow-y: auto;
-  max-height: 300px;
+  max-height: none;
+  height: calc(100vh - 300px);
 }
 
 .reader-controls {
@@ -302,11 +351,13 @@ export default {
 
 .reader-card {
   height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .chapter-content {
   width: 100%;
-  height: 600px;
+  height: calc(100vh - 150px);
   overflow-y: auto;
   padding: 20px;
 }
@@ -363,12 +414,32 @@ export default {
   }
   
   .toc-panel, .reader-panel, .summary-panel {
-    width: 100%;
+    width: 100% !important;
     margin-bottom: 20px;
+    height: auto;
+  }
+  
+  .toc-panel.toc-hidden {
+    display: none;
+    max-width: 0;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .summary-panel {
+    display: block !important;
+    height: auto;
   }
   
   .chapter-content {
-    height: 400px;
+    height: 70vh;
+  }
+  
+  .hamburger-menu {
+    top: 10px;
+    left: 10px;
+    width: 35px;
+    height: 35px;
   }
 }
 </style>

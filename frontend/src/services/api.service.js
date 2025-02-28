@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_URL = 'http://localhost:5000/api'
+const API_URL = 'http://localhost:5002/api'
 
 const apiService = {
   // 书籍相关API
@@ -107,4 +107,4 @@ const apiService = {
   }
 }
 
-export default apiService 
+export default apiService

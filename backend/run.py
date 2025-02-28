@@ -11,5 +11,5 @@ with app.app_context():
     os.makedirs(temp_dir, exist_ok=True)
 
 if __name__ == '__main__':
-    print(f"Starting Flask app on http://localhost:5000")
-    app.run(host='0.0.0.0', port=5000) 
+    print(f"Starting Flask app on http://localhost:5002")
+    app.run(host='0.0.0.0', port=5002)
